@@ -77,9 +77,11 @@
       </div>
     </div>
 
-    <script src="libreria.js"></script>
+    <!-- Librería html2pdf local -->
+    <script src="html2pdf.bundle.min.js"></script>
 
     <script>
+      // Pone la fecha de hoy al cargar la página
       window.onload = () => {
         const hoy = new Date().toISOString().split("T")[0];
         document.getElementById("fechaInput").value = hoy;
@@ -87,7 +89,6 @@
 
       function generarFactura() {
         const fechaRaw = document.getElementById("fechaInput").value;
-
         if (!fechaRaw) {
           alert("Selecciona una fecha");
           return;
@@ -109,12 +110,10 @@
         const clases = parseFloat(document.getElementById("clases").value);
         const precio = parseFloat(document.getElementById("precio").value);
 
-        // Validaciones
         if (!factura || !cliente || !nifCliente) {
           alert("Completa todos los campos");
           return;
         }
-
         if (!clases || !precio || clases <= 0 || precio <= 0) {
           alert("Clases y precio deben ser mayores que 0");
           return;
@@ -125,32 +124,22 @@
         const total = subtotal + iva;
 
         const formatoMoneda = (num) =>
-          num.toLocaleString("es-ES", {
-            style: "currency",
-            currency: "EUR",
-          });
+          num.toLocaleString("es-ES", { style: "currency", currency: "EUR" });
 
         document.getElementById("facturaNum").innerText =
           "Factura Nº: " + factura;
-
         document.getElementById("emisor").innerHTML =
           `${nombre}<br>DNI: ${dni}<br>${direccion}`;
-
         document.getElementById("clienteInfo").innerHTML =
           `${cliente}<br>NIF: ${nifCliente}`;
-
         document.getElementById("servicio").innerText =
           `${clases} clases × ${precio.toFixed(2)} €`;
-
         document.getElementById("subtotal").innerText =
           `Subtotal: ${formatoMoneda(subtotal)}`;
-
         document.getElementById("iva").innerText =
           `IVA (21%): ${formatoMoneda(iva)}`;
-
         document.getElementById("total").innerText =
           `Total: ${formatoMoneda(total)}`;
-
         document.getElementById("fechaFactura").innerText =
           "Fecha: " + fechaFactura;
       }
@@ -160,7 +149,6 @@
         const fechaRaw = document.getElementById("fechaInput").value;
 
         let fechaFormateada = "sin_fecha";
-
         if (fechaRaw) {
           const fechaObj = new Date(fechaRaw);
           const dia = String(fechaObj.getDate()).padStart(2, "0");
@@ -169,14 +157,12 @@
           fechaFormateada = `${dia}-${mes}-${año}`;
         }
 
-
         const clienteLimpio = cliente
           .trim()
           .replace(/\s+/g, "_")
           .replace(/[^a-zA-Z0-9_]/g, "");
 
         const nombreArchivo = `Factura_${clienteLimpio}_${fechaFormateada}.pdf`;
-
         const elemento = document.getElementById("facturaPreview");
 
         const opciones = {
