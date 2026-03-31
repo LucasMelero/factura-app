@@ -1,3 +1,172 @@
+<!-- <!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Factura Functional Fit</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="form">
+        <h2>Datos Factura</h2>
+
+        <label>Tu nombre</label>
+        <input id="nombre" disabled value="Oscar Melero Mendiondo" />
+
+        <label>DNI</label>
+        <input id="dni" disabled value="04228744-X" />
+
+        <label>Dirección</label>
+        <input id="direccion" disabled value="Calle de las Almortas, 16, 3ºF" />
+
+        <label>Fecha</label>
+        <input type="date" id="fechaInput" />
+
+        <label>Nº Factura</label>
+        <input id="factura" />
+
+        <label>Cliente</label>
+        <input id="cliente" />
+
+        <label>NIF Cliente</label>
+        <input id="nifCliente" />
+
+        <label>Precio (IVA incluido €)</label>
+        <input type="number" id="precio" min="0.01" step="0.01" />
+
+        <button class="btn-primary" onclick="generarFactura()">
+          Generar Factura
+        </button>
+        <button class="btn-secondary" onclick="descargarPDF()">
+          Descargar PDF
+        </button>
+      </div>
+
+      <div class="invoice" id="facturaPreview">
+        <div class="invoice-header">
+          <div>
+            <h1>FACTURA</h1>
+            <p id="facturaNum"></p>
+            <p id="fechaFactura"></p>
+          </div>
+          <img src="LogoEmpresa.jpeg" alt="Logo" class="logo" />
+        </div>
+
+        <div class="invoice-section">
+          <p id="emisor"></p>
+        </div>
+
+        <div class="invoice-section">
+          <h3>Cliente</h3>
+          <p id="clienteInfo"></p>
+        </div>
+
+        <div class="totals">
+          <p id="base"></p>
+          <p id="iva"></p>
+          <strong id="total"></strong>
+        </div>
+      </div>
+    </div>
+
+    <script src="html2pdf.bundle.min.js"></script>
+
+    <script>
+      window.onload = () => {
+        const hoy = new Date().toISOString().split("T")[0];
+        document.getElementById("fechaInput").value = hoy;
+      };
+
+      function generarFactura() {
+        const fechaRaw = document.getElementById("fechaInput").value;
+        if (!fechaRaw) {
+          alert("Selecciona una fecha");
+          return;
+        }
+
+        const fechaObj = new Date(fechaRaw);
+        const dia = String(fechaObj.getDate()).padStart(2, "0");
+        const mes = String(fechaObj.getMonth() + 1).padStart(2, "0");
+        const año = fechaObj.getFullYear();
+        const fechaFactura = `${dia}-${mes}-${año}`;
+
+        const nombre = document.getElementById("nombre").value;
+        const dni = document.getElementById("dni").value;
+        const direccion = document.getElementById("direccion").value;
+        const factura = document.getElementById("factura").value;
+        const cliente = document.getElementById("cliente").value;
+        const nifCliente = document.getElementById("nifCliente").value;
+        const precio = parseFloat(document.getElementById("precio").value);
+
+        if (!factura || !cliente || !nifCliente || !precio) {
+          alert("Completa todos los campos correctamente");
+          return;
+        }
+
+        if (precio <= 0) {
+          alert("El precio debe ser mayor que 0");
+          return;
+        }
+        
+        const iva = precio * 0.21;
+        const base = precio - iva;
+        const total = precio;
+
+        const formatoMoneda = (num) =>
+          num.toLocaleString("es-ES", { style: "currency", currency: "EUR" });
+
+        document.getElementById("facturaNum").innerText =
+          "Factura Nº: " + factura;
+        document.getElementById("emisor").innerHTML =
+          `${nombre}<br>DNI: ${dni}<br>${direccion}`;
+        document.getElementById("clienteInfo").innerHTML =
+          `${cliente}<br>NIF: ${nifCliente}`;
+
+        document.getElementById("base").innerText =
+          `Precio Sin IVA: ${formatoMoneda(base)}`;
+        document.getElementById("iva").innerText =
+          `IVA (21%): ${formatoMoneda(iva)}`;
+        document.getElementById("total").innerText =
+          `Total: ${formatoMoneda(total)}`;
+        document.getElementById("fechaFactura").innerText =
+          "Fecha: " + fechaFactura;
+      }
+
+      function descargarPDF() {
+        const cliente = document.getElementById("cliente").value || "Cliente";
+        const fechaRaw = document.getElementById("fechaInput").value;
+
+        let fechaFormateada = "sin_fecha";
+        if (fechaRaw) {
+          const fechaObj = new Date(fechaRaw);
+          const dia = String(fechaObj.getDate()).padStart(2, "0");
+          const mes = String(fechaObj.getMonth() + 1).padStart(2, "0");
+          const año = fechaObj.getFullYear();
+          fechaFormateada = `${dia}-${mes}-${año}`;
+        }
+
+        const clienteLimpio = cliente
+          .trim()
+          .replace(/\s+/g, "_")
+          .replace(/[^a-zA-Z0-9_]/g, "");
+
+        const nombreArchivo = `Factura_${clienteLimpio}_${fechaFormateada}.pdf`;
+        const elemento = document.getElementById("facturaPreview");
+
+        const opciones = {
+          margin: 0.5,
+          filename: nombreArchivo,
+          image: { type: "jpeg", quality: 0.98 },
+          html2canvas: { scale: 2 },
+          jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
+        };
+
+        html2pdf().set(opciones).from(elemento).save();
+      }
+    </script>
+  </body>
+</html> -->
+
 <!doctype html>
 <html lang="es">
   <head>
@@ -32,9 +201,9 @@
         <input id="nifCliente" />
 
         <label>Nº Clases</label>
-        <input type="number" id="clases" min="1" />
+        <input type="number" id="clases" min="1" step="1" />
 
-        <label>Precio por clase (€)</label>
+        <label>Precio (IVA incluido €)</label>
         <input type="number" id="precio" min="0.01" step="0.01" />
 
         <button class="btn-primary" onclick="generarFactura()">
@@ -66,22 +235,20 @@
 
         <div class="invoice-section">
           <h3>Servicio</h3>
-          <p id="servicio"></p>
+          <p id="servicio">Servicio prestado</p>
         </div>
 
         <div class="totals">
-          <p id="subtotal"></p>
+          <p id="base"></p>
           <p id="iva"></p>
           <strong id="total"></strong>
         </div>
       </div>
     </div>
 
-    <!-- Librería html2pdf local -->
     <script src="html2pdf.bundle.min.js"></script>
 
     <script>
-      // Pone la fecha de hoy al cargar la página
       window.onload = () => {
         const hoy = new Date().toISOString().split("T")[0];
         document.getElementById("fechaInput").value = hoy;
@@ -106,22 +273,23 @@
         const factura = document.getElementById("factura").value;
         const cliente = document.getElementById("cliente").value;
         const nifCliente = document.getElementById("nifCliente").value;
-
-        const clases = parseFloat(document.getElementById("clases").value);
         const precio = parseFloat(document.getElementById("precio").value);
+        const clases = document.getElementById("clases").value;
 
-        if (!factura || !cliente || !nifCliente) {
-          alert("Completa todos los campos");
-          return;
-        }
-        if (!clases || !precio || clases <= 0 || precio <= 0) {
-          alert("Clases y precio deben ser mayores que 0");
+        if (!factura || !cliente || !nifCliente || !precio) {
+          alert("Completa todos los campos correctamente");
           return;
         }
 
-        const subtotal = clases * precio;
-        const iva = subtotal * 0.21;
-        const total = subtotal + iva;
+        if (precio <= 0) {
+          alert("El precio debe ser mayor que 0");
+          return;
+        }
+
+        // El precio introducido es el TOTAL (IVA incluido)
+        const iva = precio * 0.21;
+        const base = precio - iva;
+        const total = precio;
 
         const formatoMoneda = (num) =>
           num.toLocaleString("es-ES", { style: "currency", currency: "EUR" });
@@ -132,10 +300,16 @@
           `${nombre}<br>DNI: ${dni}<br>${direccion}`;
         document.getElementById("clienteInfo").innerHTML =
           `${cliente}<br>NIF: ${nifCliente}`;
-        document.getElementById("servicio").innerText =
-          `${clases} clases × ${precio.toFixed(2)} €`;
-        document.getElementById("subtotal").innerText =
-          `Subtotal: ${formatoMoneda(subtotal)}`;
+
+        // Mostrar servicio con número de clases
+        if (clases && clases > 0) {
+          document.getElementById("servicio").innerText = `${clases} clases`;
+        } else {
+          document.getElementById("servicio").innerText = "Servicio prestado";
+        }
+
+        document.getElementById("base").innerText =
+          `Base imponible: ${formatoMoneda(base)}`;
         document.getElementById("iva").innerText =
           `IVA (21%): ${formatoMoneda(iva)}`;
         document.getElementById("total").innerText =
