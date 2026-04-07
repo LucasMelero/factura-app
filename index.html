@@ -107,7 +107,7 @@
           alert("El precio debe ser mayor que 0");
           return;
         }
-
+        
         const iva = precio * 0.21;
         const base = precio - iva;
         const total = precio;
@@ -117,10 +117,10 @@
 
         document.getElementById("facturaNum").innerText =
           "Factura Nº: " + factura;
-        document.getElementById("emisor").innerText =
-          nombre + "\nDNI: " + dni + "\n" + direccion;
-        document.getElementById("clienteInfo").innerText =
-          cliente + " - NIF: " + nifCliente;
+        document.getElementById("emisor").innerHTML =
+          `${nombre}<br>DNI: ${dni}<br>${direccion}`;
+        document.getElementById("clienteInfo").innerHTML =
+          `${cliente}<br>NIF: ${nifCliente}`;
 
         document.getElementById("base").innerText =
           `Precio Sin IVA: ${formatoMoneda(base)}`;
@@ -154,11 +154,11 @@
         const elemento = document.getElementById("facturaPreview");
 
         const opciones = {
-          margin: 5,
+          margin: 0.5,
           filename: nombreArchivo,
-          image: { type: "jpeg", quality: 1 },
-          html2canvas: { scale: 1, useCORS: true },
-          jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+          image: { type: "jpeg", quality: 0.98 },
+          html2canvas: { scale: 2 },
+          jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
         };
 
         html2pdf().set(opciones).from(elemento).save();

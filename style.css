@@ -6,7 +6,8 @@ body {
 }
 
 .wrapper {
- display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 20px;
   max-width: 1200px;
   margin: auto;
@@ -95,19 +96,9 @@ button {
     position: absolute;
     left: 0;
     top: 0;
-    width: 100%;
+    width: 95%;
   }
   .invoice p {
     white-space: pre-line;
   }
-  .wrapper {
-    display: block;
-  }
-}
-
-#facturaPreview {
-  width: 794px;        /* ancho A4 */
-  min-height: 1123px;  /* alto A4 */
-  padding: 20px;
-  box-sizing: border-box;
 }
