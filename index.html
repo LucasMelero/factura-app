@@ -98,7 +98,7 @@
         const nifCliente = document.getElementById("nifCliente").value;
         const precio = parseFloat(document.getElementById("precio").value);
 
-        if (!factura || !cliente || !nifCliente || !precio) {
+        if (!factura || !cliente || !nifCliente || isNaN(precio)) {
           alert("Completa todos los campos correctamente");
           return;
         }
@@ -107,7 +107,7 @@
           alert("El precio debe ser mayor que 0");
           return;
         }
-        
+
         const iva = precio * 0.21;
         const base = precio - iva;
         const total = precio;
@@ -133,6 +133,12 @@
       }
 
       function descargarPDF() {
+        generarFactura(); // 👈 AÑADE ESTA LÍNEA
+
+        const elemento = document.getElementById("facturaPreview");
+
+        console.log(elemento.innerHTML);
+
         const cliente = document.getElementById("cliente").value || "Cliente";
         const fechaRaw = document.getElementById("fechaInput").value;
 
@@ -151,7 +157,6 @@
           .replace(/[^a-zA-Z0-9_]/g, "");
 
         const nombreArchivo = `Factura_${clienteLimpio}_${fechaFormateada}.pdf`;
-        const elemento = document.getElementById("facturaPreview");
 
         const opciones = {
           margin: 0.5,
