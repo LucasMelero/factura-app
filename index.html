@@ -132,44 +132,46 @@
           "Fecha: " + fechaFactura;
       }
 
-      function descargarPDF() {
-        generarFactura(); // 👈 AÑADE ESTA LÍNEA
+      async function descargarPDF() {
+  generarFactura();
 
-        const elemento = document.getElementById("facturaPreview");
+  const elemento = document.getElementById("facturaPreview");
 
-        console.log(elemento.innerHTML);
+  // 👇 Fuerza reflow (MUY IMPORTANTE)
+  elemento.offsetHeight;
 
-        setTimeout(() => {
-        const cliente = document.getElementById("cliente").value || "Cliente";
-        const fechaRaw = document.getElementById("fechaInput").value;
+  // 👇 Espera a que el navegador pinte
+  await new Promise(resolve => setTimeout(resolve, 100));
 
-        let fechaFormateada = "sin_fecha";
-        if (fechaRaw) {
-          const fechaObj = new Date(fechaRaw);
-          const dia = String(fechaObj.getDate()).padStart(2, "0");
-          const mes = String(fechaObj.getMonth() + 1).padStart(2, "0");
-          const año = fechaObj.getFullYear();
-          fechaFormateada = `${dia}-${mes}-${año}`;
-        }
+  const cliente = document.getElementById("cliente").value || "Cliente";
+  const fechaRaw = document.getElementById("fechaInput").value;
 
-        const clienteLimpio = cliente
-          .trim()
-          .replace(/\s+/g, "_")
-          .replace(/[^a-zA-Z0-9_]/g, "");
+  let fechaFormateada = "sin_fecha";
+  if (fechaRaw) {
+    const fechaObj = new Date(fechaRaw);
+    const dia = String(fechaObj.getDate()).padStart(2, "0");
+    const mes = String(fechaObj.getMonth() + 1).padStart(2, "0");
+    const año = fechaObj.getFullYear();
+    fechaFormateada = `${dia}-${mes}-${año}`;
+  }
 
-        const nombreArchivo = `Factura_${clienteLimpio}_${fechaFormateada}.pdf`;
+  const clienteLimpio = cliente
+    .trim()
+    .replace(/\s+/g, "_")
+    .replace(/[^a-zA-Z0-9_]/g, "");
 
-        const opciones = {
-          margin: 0.5,
-          filename: nombreArchivo,
-          image: { type: "jpeg", quality: 0.98 },
-          html2canvas: { scale: 2 },
-          jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
-        };
+  const nombreArchivo = `Factura_${clienteLimpio}_${fechaFormateada}.pdf`;
 
-        html2pdf().set(opciones).from(elemento).save();
-      },300);
-    }
+  const opciones = {
+    margin: 0.5,
+    filename: nombreArchivo,
+    image: { type: "jpeg", quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
+  };
+
+  await html2pdf().set(opciones).from(elemento).save();
+}
     </script>
   </body>
 </html>
