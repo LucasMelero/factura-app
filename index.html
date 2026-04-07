@@ -116,42 +116,42 @@
       }
 
       async function descargarPDF() {
-        generarFactura(); // asegura que los datos estén actualizados
+  generarFactura(); // actualiza todos los datos
 
-        const elemento = document.getElementById("facturaPreview");
+  const elemento = document.getElementById("facturaPreview");
 
-        // Espera al navegador a renderizar completamente
-        await new Promise(requestAnimationFrame);
+  // fuerza al navegador a renderizar los cambios
+  await new Promise(requestAnimationFrame);
 
-        const cliente = document.getElementById("cliente").value || "Cliente";
-        const fechaRaw = document.getElementById("fechaInput").value;
+  const cliente = document.getElementById("cliente").value || "Cliente";
+  const fechaRaw = document.getElementById("fechaInput").value;
 
-        let fechaFormateada = "sin_fecha";
-        if (fechaRaw) {
-          const fechaObj = new Date(fechaRaw);
-          const dia = String(fechaObj.getDate()).padStart(2, "0");
-          const mes = String(fechaObj.getMonth() + 1).padStart(2, "0");
-          const año = fechaObj.getFullYear();
-          fechaFormateada = `${dia}-${mes}-${año}`;
-        }
+  let fechaFormateada = "sin_fecha";
+  if (fechaRaw) {
+    const fechaObj = new Date(fechaRaw);
+    const dia = String(fechaObj.getDate()).padStart(2, "0");
+    const mes = String(fechaObj.getMonth() + 1).padStart(2, "0");
+    const año = fechaObj.getFullYear();
+    fechaFormateada = `${dia}-${mes}-${año}`;
+  }
 
-        const clienteLimpio = cliente
-          .trim()
-          .replace(/\s+/g, "_")
-          .replace(/[^a-zA-Z0-9_]/g, "");
+  const clienteLimpio = cliente
+    .trim()
+    .replace(/\s+/g, "_")
+    .replace(/[^a-zA-Z0-9_]/g, "");
 
-        const nombreArchivo = `Factura_${clienteLimpio}_${fechaFormateada}.pdf`;
+  const nombreArchivo = `Factura_${clienteLimpio}_${fechaFormateada}.pdf`;
 
-        const opciones = {
-          margin: 0.5,
-          filename: nombreArchivo,
-          image: { type: "jpeg", quality: 0.98 },
-          html2canvas: { scale: 2, useCORS: true },
-          jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
-        };
+  const opciones = {
+    margin: 0.5,
+    filename: nombreArchivo,
+    image: { type: "jpeg", quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
+  };
 
-        await html2pdf().set(opciones).from(elemento).save();
-      }
+  await html2pdf().set(opciones).from(elemento).save();
+}
     </script>
   </body>
 </html>
