@@ -139,7 +139,6 @@
 
         console.log(elemento.innerHTML);
 
-        setTimeout(() => {
         const cliente = document.getElementById("cliente").value || "Cliente";
         const fechaRaw = document.getElementById("fechaInput").value;
 
@@ -159,6 +158,7 @@
 
         const nombreArchivo = `Factura_${clienteLimpio}_${fechaFormateada}.pdf`;
 
+
         const opciones = {
           margin: 0.5,
           filename: nombreArchivo,
@@ -168,8 +168,8 @@
         };
 
         html2pdf().set(opciones).from(elemento).save();
-      },300);
-    }
+      }
     </script>
   </body>
 </html>
+
