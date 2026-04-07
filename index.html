@@ -132,13 +132,14 @@
           "Fecha: " + fechaFactura;
       }
 
-      function descargarPDF() {
+     function descargarPDF() {
         generarFactura(); // 👈 AÑADE ESTA LÍNEA
 
         const elemento = document.getElementById("facturaPreview");
 
-       console.log("Contenido factura:", elemento.innerHTML);
+        console.log(elemento.innerHTML);
 
+        setTimeout(() => {
         const cliente = document.getElementById("cliente").value || "Cliente";
         const fechaRaw = document.getElementById("fechaInput").value;
 
@@ -167,7 +168,8 @@
         };
 
         html2pdf().set(opciones).from(elemento).save();
-      }
+      },300);
+    }
     </script>
   </body>
 </html>
