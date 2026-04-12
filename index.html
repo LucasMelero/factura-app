@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <title>Factura Functional Fit</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
     <div class="wrapper">
@@ -30,6 +30,9 @@
 
         <label>NIF Cliente</label>
         <input id="nifCliente" />
+
+        <label>Concepto / Artículo</label>
+        <input id="articulo" />
 
         <label>Precio (IVA incluido €)</label>
         <input type="number" id="precio" min="0.01" step="0.01" />
@@ -61,10 +64,15 @@
           <p id="clienteInfo"></p>
         </div>
 
+        <div class="invoice-section">
+          <h3>Concepto</h3>
+          <p id="articuloInfo"></p>
+        </div>
+
         <div class="totals">
           <p id="base"></p>
           <p id="iva"></p>
-         <p id="total" style="font-weight: bold;"></p>
+          <strong id="total"></strong>
         </div>
       </div>
     </div>
@@ -96,9 +104,10 @@
         const factura = document.getElementById("factura").value;
         const cliente = document.getElementById("cliente").value;
         const nifCliente = document.getElementById("nifCliente").value;
+        const articulo = document.getElementById("articulo").value; // ✅ NUEVO
         const precio = parseFloat(document.getElementById("precio").value);
 
-        if (!factura || !cliente || !nifCliente || isNaN(precio)) {
+        if (!factura || !cliente || !nifCliente || !precio || !articulo) {
           alert("Completa todos los campos correctamente");
           return;
         }
@@ -117,10 +126,14 @@
 
         document.getElementById("facturaNum").innerText =
           "Factura Nº: " + factura;
-        document.getElementById("emisor").innerHTML =
-          `${nombre}<br>DNI: ${dni}<br>${direccion}`;
-        document.getElementById("clienteInfo").innerHTML =
-          `${cliente}<br>NIF: ${nifCliente}`;
+
+        document.getElementById("emisor").innerText =
+          nombre + "\nDNI: " + dni + "\n" + direccion;
+
+        document.getElementById("clienteInfo").innerText =
+          cliente + " - NIF: " + nifCliente;
+
+        document.getElementById("articuloInfo").innerText = articulo;
 
         document.getElementById("base").innerText =
           `Precio Sin IVA: ${formatoMoneda(base)}`;
@@ -132,44 +145,37 @@
           "Fecha: " + fechaFactura;
       }
 
-      async function descargarPDF() {
-  generarFactura(); // actualiza todos los datos
+      function descargarPDF() {
+        const cliente = document.getElementById("cliente").value || "Cliente";
+        const fechaRaw = document.getElementById("fechaInput").value;
 
-  const elemento = document.getElementById("facturaPreview");
+        let fechaFormateada = "sin_fecha";
+        if (fechaRaw) {
+          const fechaObj = new Date(fechaRaw);
+          const dia = String(fechaObj.getDate()).padStart(2, "0");
+          const mes = String(fechaObj.getMonth() + 1).padStart(2, "0");
+          const año = fechaObj.getFullYear();
+          fechaFormateada = `${dia}-${mes}-${año}`;
+        }
 
-  // fuerza reflow y espera un poco a que todo se pinte
-  elemento.style.display = "block"; 
-  await new Promise(resolve => setTimeout(resolve, 150)); // 150ms suele ser suficiente
+        const clienteLimpio = cliente
+          .trim()
+          .replace(/\s+/g, "_")
+          .replace(/[^a-zA-Z0-9_]/g, "");
 
-  const cliente = document.getElementById("cliente").value || "Cliente";
-  const fechaRaw = document.getElementById("fechaInput").value;
+        const nombreArchivo = `Factura_${clienteLimpio}_${fechaFormateada}.pdf`;
+        const elemento = document.getElementById("facturaPreview");
 
-  let fechaFormateada = "sin_fecha";
-  if (fechaRaw) {
-    const fechaObj = new Date(fechaRaw);
-    const dia = String(fechaObj.getDate()).padStart(2, "0");
-    const mes = String(fechaObj.getMonth() + 1).padStart(2, "0");
-    const año = fechaObj.getFullYear();
-    fechaFormateada = `${dia}-${mes}-${año}`;
-  }
+        const opciones = {
+          margin: 5,
+          filename: nombreArchivo,
+          image: { type: "jpeg", quality: 1 },
+          html2canvas: { scale: 2, useCORS: true },
+          jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+        };
 
-  const clienteLimpio = cliente
-    .trim()
-    .replace(/\s+/g, "_")
-    .replace(/[^a-zA-Z0-9_]/g, "");
-
-  const nombreArchivo = `Factura_${clienteLimpio}_${fechaFormateada}.pdf`;
-
-  const opciones = {
-    margin: 0.5,
-    filename: nombreArchivo,
-    image: { type: "jpeg", quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true, scrollY: -window.scrollY },
-    jsPDF: { unit: "in", format: "a4", orientation: "portrait" },
-  };
-
-  await html2pdf().set(opciones).from(elemento).save();
-}
+        html2pdf().set(opciones).from(elemento).save();
+      }
     </script>
   </body>
 </html>

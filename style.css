@@ -5,14 +5,28 @@ body {
   padding: 20px;
 }
 
+/* Layout principal */
 .wrapper {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
   gap: 20px;
   max-width: 1200px;
   margin: auto;
+  align-items: flex-start;
+  flex-wrap: wrap;
 }
 
+/* Formulario más estrecho */
+.form {
+  flex: 1;
+  max-width: 350px;
+}
+
+/* Factura ocupa más espacio */
+.invoice {
+  flex: 2;
+}
+
+/* Estilo común */
 .form,
 .invoice {
   background: white;
@@ -21,9 +35,14 @@ body {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
 }
 
-h1,
-h2 {
-  margin-top: 0;
+/* Inputs bien alineados */
+input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
 }
 
 label {
@@ -32,15 +51,7 @@ label {
   display: block;
 }
 
-input {
-  width: 95%;
-  padding: 8px;
-  margin: 0 auto;
-  margin-top: 5px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
-
+/* Botones */
 button {
   margin-top: 15px;
   width: 100%;
@@ -55,11 +66,13 @@ button {
   background: #2563eb;
   color: white;
 }
+
 .btn-secondary {
   background: #10b981;
   color: white;
 }
 
+/* Header factura */
 .invoice-header {
   display: flex;
   justify-content: space-between;
@@ -70,8 +83,10 @@ button {
 
 .logo {
   height: 100px;
+  padding-right: 20px;
 }
 
+/* Secciones */
 .invoice-section {
   margin-top: 15px;
 }
@@ -84,21 +99,61 @@ button {
   font-size: 18px;
 }
 
+#facturaPreview {
+  width: 794px;             
+  height: 835px;      
+  padding: 20px;
+  box-sizing: border-box;
+  margin: 0;                
+}
+
+
 @media print {
+  body {
+    background: white;
+    padding: 0;
+  }
+
   body * {
     visibility: hidden;
   }
-  .invoice,
-  .invoice * {
+
+  #facturaPreview,
+  #facturaPreview * {
     visibility: visible;
   }
-  .invoice {
+
+  #facturaPreview {
     position: absolute;
     left: 0;
     top: 0;
-    width: 95%;
+    width: 794px;
+    height: 1123px;
+    margin: 0;
+    box-shadow: none;
+    border-radius: 0;
   }
+
+  .wrapper {
+    display: block;
+  }
+
   .invoice p {
     white-space: pre-line;
+  }
+}
+/* Responsive */
+@media (max-width: 900px) {
+  .wrapper {
+    flex-direction: column;
+  }
+
+  .form,
+  .invoice {
+    max-width: 100%;
+  }
+
+  .invoice {
+    width: 100%;
   }
 }
