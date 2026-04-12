@@ -17,13 +17,15 @@ body {
 
 /* Formulario más estrecho */
 .form {
-  flex: 1;
-  max-width: 350px;
+  flex: 1.2;
+  min-width: 420px;
+  max-width: 460px;
 }
 
 /* Factura ocupa más espacio */
 .invoice {
-  flex: 2;
+  flex: 1.6;
+  max-width: 680px;
 }
 
 /* Estilo común */
@@ -101,7 +103,7 @@ button {
 
 #facturaPreview {
   width: 794px;
-  min-height: 1123px;
+  min-height: 830px;
   height: auto;
   padding: 20px;
   box-sizing: border-box;
