@@ -89,7 +89,7 @@
         const fechaRaw = document.getElementById("fechaInput").value;
         if (!fechaRaw) {
           alert("Selecciona una fecha");
-          return;
+          return false;
         }
 
         const fechaObj = new Date(fechaRaw);
@@ -109,12 +109,12 @@
 
         if (!factura || !cliente || !nifCliente || !precio || !articulo) {
           alert("Completa todos los campos correctamente");
-          return;
+          return false;
         }
 
         if (precio <= 0) {
           alert("El precio debe ser mayor que 0");
-          return;
+          return false;
         }
 
         const iva = precio * 0.21;
@@ -143,9 +143,16 @@
           `Total: ${formatoMoneda(total)}`;
         document.getElementById("fechaFactura").innerText =
           "Fecha: " + fechaFactura;
+
+        return true;
       }
 
       function descargarPDF() {
+        const facturaGenerada = generarFactura();
+        if (!facturaGenerada) {
+          return;
+        }
+
         const cliente = document.getElementById("cliente").value || "Cliente";
         const fechaRaw = document.getElementById("fechaInput").value;
 

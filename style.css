@@ -100,11 +100,16 @@ button {
 }
 
 #facturaPreview {
-  width: 794px;             
-  height: 835px;      
+  width: 794px;
+  min-height: 1123px;
+  height: auto;
   padding: 20px;
   box-sizing: border-box;
-  margin: 0;                
+  margin: 0;
+}
+
+.invoice p {
+  white-space: pre-line;
 }
 
 
@@ -128,7 +133,8 @@ button {
     left: 0;
     top: 0;
     width: 794px;
-    height: 1123px;
+    min-height: 1123px;
+    height: auto;
     margin: 0;
     box-shadow: none;
     border-radius: 0;
@@ -136,10 +142,6 @@ button {
 
   .wrapper {
     display: block;
-  }
-
-  .invoice p {
-    white-space: pre-line;
   }
 }
 /* Responsive */
