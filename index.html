@@ -117,8 +117,8 @@
           return false;
         }
 
-        const iva = precio * 0.21;
-        const base = precio - iva;
+        const base = precio / 1.21;
+        const iva = precio - base;
         const total = precio;
 
         const formatoMoneda = (num) =>
